@@ -1,14 +1,21 @@
-import user_interface as ui
-import calculation
+# import user_interface as ui
+import operations
 import logger as log
 
-def distribution():
-    data = ui.expression()
-    # calculation.init(data)
-    if 'i' in data:
-        result = calculation.calc_eval(data)
+
+def distribution(data):
+    data = data.replace(' ','')
+    if 'i' or 'j' in data:
+        data = data.replace('i','j')
+        data = data.replace('+j','+1j')
+        data = data.replace('-j','-1j')
+        data = data.replace('/j','/1j')
+        data = data.replace('*j','*1j')
+        data = data.replace('(j','(1j')
+        if data[0] == 'j': data = '1' + data
+        result = operations.complex_calc(data)
     else:
-        result = calculation.calc(data)
-    ui.view_result(result)
+        result = operations.rational_calc(data)
     log.expression_logger(data)
     log.result_logger(result)
+    return result

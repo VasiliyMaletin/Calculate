@@ -1,28 +1,29 @@
 from tkinter import *
-from controller_empty import calc
+from controller import distribution
+from operations import rational_calc
 
 #Словарь текста и цвета кнопок в зависимости от их координат
 button_params = {
     '11': ['', 'lightblue'],
-    '12': ['', 'lightblue'],
-    '13': ['(', 'lightblue'],
-    '14': [')', 'lightblue'],
+    '12': ['(', 'lightblue'],
+    '13': [')', 'lightblue'],
+    '14': ['/', 'lightblue'],
     '21': ['7', 'lightgray'],
     '22': ['8', 'lightgray'],
     '23': ['9', 'lightgray'],
-    '24': ['/', 'lightblue'],
+    '24': ['*', 'lightblue'],
     '31': ['4', 'lightgray'],
     '32': ['5', 'lightgray'],
     '33': ['6', 'lightgray'],
-    '34': ['*', 'lightblue'],
+    '34': ['-', 'lightblue'],
     '41': ['1', 'lightgray'],
     '42': ['2', 'lightgray'],
     '43': ['3', 'lightgray'],
-    '44': ['-', 'lightblue'],
+    '44': ['+', 'lightblue'],
     '51': ['0', 'lightgray'],
     '52': ['.', 'lightgray'],
-    '53': ['', 'lightgray'],
-    '54': ['+', 'lightblue']
+    '53': ['j', 'lightgray'],
+    '54': ['=', 'lightblue']
 }
 
 edit = ''
@@ -31,15 +32,10 @@ def clear_btn_click():
     edit.delete(0,END)    
     edit.insert(0,'0')
 
-def del_btn_click():
-    edit.delete(len(edit.get())-1,END)
-    if edit.get() == '':
-        edit.insert(0,'0')
-
 def result_button_click():
     calc_string = edit.get()
     edit.delete(0,END)    
-    edit.insert(0,eval(calc_string))
+    edit.insert(0,distribution(calc_string))
 
 def on_click(event):
     button_text = event.widget.cget('text')
@@ -81,27 +77,20 @@ def window_init():
     
     for x in range(1,5):
         for y in range(1,6):
-            if str(y)+str(x) not in ['53']:
-                cur_text = button_params[str(y)+str(x)][0]
-                btn = Button(root, font=btn_font, text = cur_text)
-                btn.bind(f'<Button>', on_click)
-                btn.configure(bg = button_params[str(y)+str(x)][1])
-                btn.grid(column=x-1, row=y, sticky="news", padx=1, pady=1)
+            cur_text = button_params[str(y)+str(x)][0]
+            btn = Button(root, font=btn_font, text = cur_text)
+            btn.bind(f'<Button>', on_click)
+            btn.configure(bg = button_params[str(y)+str(x)][1])
+            btn.grid(column=x-1, row=y, sticky="news", padx=1, pady=1)
                     
     clear_btn = Button(root, font=btn_font, text = 'C', command = clear_btn_click)
     clear_btn.configure(bg = "pink")
     clear_btn.grid(column=0, row=1, sticky="news", padx=1,pady=1)
     
-    del_btn = Button(root, font=btn_font, text = '<', command = del_btn_click)
-    del_btn.configure(bg = "pink")
-    del_btn.grid(column=1, row=1, sticky="news", padx=1,pady=1)
-    
     result_btn = Button(root, font=btn_font, text = '=', command = result_button_click)
-    result_btn.grid(column=2, row=5, sticky="news", padx=1, pady=1)
+    result_btn.grid(column=3, row=5, sticky="news", padx=1, pady=1)
     
     root.columnconfigure(tuple(range(4)), weight=1)
     root.rowconfigure(tuple(range(6)), weight=1)
 
     root.mainloop()
-
-window_init()
